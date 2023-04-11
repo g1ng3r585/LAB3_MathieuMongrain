@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GestionJeu : MonoBehaviour
 {
@@ -11,6 +13,10 @@ public class GestionJeu : MonoBehaviour
     private int _accrochageNiveau2 = 0;
     private float _tempsNiveau1 = 0.0f;  // Attribut qui conserve le temps pour le niveau 1
     private float _tempsNiveau2 = 0.0f;
+
+    private float _tempsFinal = 0;
+    private float _tempsDepart = 0;
+
 
     // ***** Méthodes privées *****
     private void Awake()
@@ -31,7 +37,16 @@ public class GestionJeu : MonoBehaviour
 
     private void Start()
     {
-        InstructionsDepart();  // Affiche les instructions de départ
+        _tempsDepart = Time.time;
+        //InstructionsDepart();  // Affiche les instructions de départ
+    }
+
+    private void Update()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 4 || SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     /*
@@ -53,12 +68,30 @@ public class GestionJeu : MonoBehaviour
     public void AugmenterPointage()
     {
         _pointage++;
+        UiManager uiManager = FindObjectOfType<UiManager>();
+        uiManager.ChangerPointage(_pointage);
     }
 
     // Accesseur qui retourne la valeur de l'attribut pointage
     public int GetPointage()
     {
         return _pointage;
+    }
+
+    public float GetTempsDepart()
+    {
+        return _tempsDepart;
+    }
+
+
+    public void SetTempsFinal(float p_tempFinal)
+    {
+        _tempsFinal = p_tempFinal - _tempsDepart;
+    }
+
+    public float GetTempsFinal()
+    {
+        return _tempsFinal;
     }
 
     // Accesseur qui retourne le temps pour le niveau 1
